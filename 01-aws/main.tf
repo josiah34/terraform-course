@@ -7,6 +7,7 @@ terraform {
   }
 }
 
+
 # Configure the AWS Provider
 provider "aws" {
   region = "us-east-1"
@@ -15,14 +16,24 @@ provider "aws" {
 
 
 resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block =  var.vpc_cidr_block
 
   tags = {
-    "Name" = "Main VPC"
+    "Name" = "Production ${var.main_vpc_name}"
   }
 
 }
 
+
+resource "aws_subnet" "web" {
+  vpc_id = aws_vpc.main.id
+  cidr_block = var.web_subnet_cidr_block
+  availability_zone = "us-east-1a"
+  tags = {
+    "Name" = "Web subnet"
+  }
+
+}
 
 # resource "aws_vpc" "myvpc" {
 #   cidr_block = "192.168.0.0/16"
