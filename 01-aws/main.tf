@@ -58,6 +58,37 @@ resource "aws_default_route_table" "main_vpc_default_rt" {
   }
 }
 
+# Configure the deault security group for the VPC
+
+resource "aws_default_security_group" "default_sec_group" {
+  vpc_id = aws_vpc.main.id
+  ingress {
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    # cidr_blocks = [var.my_public_ip]
+  }
+
+  ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    "Name" = "Default Security Group for ${var.main_vpc_name}"
+  }
+}
+
 
 
 # resource "aws_vpc" "myvpc" {

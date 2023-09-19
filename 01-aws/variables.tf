@@ -11,3 +11,5 @@ variable "web_subnet_cidr_block" {
 }
 
 variable "main_vpc_name" {}
+
+variable "my_public_ip" {} 
