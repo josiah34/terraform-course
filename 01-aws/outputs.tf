@@ -12,4 +12,4 @@ output "ami_id" {
   description = "value of the ami id"
   value       = aws_instance.server.ami
 }
-  
+

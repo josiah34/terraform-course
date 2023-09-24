@@ -89,7 +89,6 @@ resource "aws_default_security_group" "default_sec_group" {
   }
 }
 
-
 resource "aws_instance" "server" {
   ami                         = "ami-04cb4ca688797756f"
   instance_type               = "t2.micro"
@@ -97,10 +96,25 @@ resource "aws_instance" "server" {
   vpc_security_group_ids      = [aws_default_security_group.default_sec_group.id]
   associate_public_ip_address = true
   key_name                    = "prod_ssh_key"
+  # Defining user data to run commands on the instance at launch time
+  user_data = file("setup.sh")
   tags = {
     "Name" = "my-server"
   }
 }
+
+
+# resource "aws_instance" "server" {
+#   ami                         = "ami-04cb4ca688797756f"
+#   instance_type               = "t2.micro"
+#   subnet_id                   = aws_subnet.web.id
+#   vpc_security_group_ids      = [aws_default_security_group.default_sec_group.id]
+#   associate_public_ip_address = true
+#   key_name                    = "prod_ssh_key"
+#   tags = {
+#     "Name" = "my-server"
+#   }
+# }
 
 
 # resource "aws_vpc" "myvpc" {

@@ -4,7 +4,9 @@
 # .tfstate files
 *.tfstate
 *.tfstate.*
-
+test_rsa
+test_rsa.pub
+web-app*
 # Crash log files
 crash.log
 crash.*.log
