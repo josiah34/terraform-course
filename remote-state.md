@@ -29,3 +29,5 @@ terraform {
 
 3. Initialize using ``terraform init``. Once initialized do a ``terraform apply -auto-approve``.
 
+4. You'll notice that this time after resource creation that no local state file is created. Instead it is stored on the S3 bucket that was created. 
+5.  ![remote-state](https://github.com/josiah34/terraform-course/assets/25124463/5bcda016-1420-43bb-a207-432bef38e6b0)
