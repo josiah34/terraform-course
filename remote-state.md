@@ -14,3 +14,18 @@
 1. Creating the S3 Bucket. Also I enable versioning so that if the state file becomes corrupted I can revert back to an older version. 
 
 ![s3-bucket](https://github.com/josiah34/terraform-course/assets/25124463/ff8045eb-f382-48c4-aacc-c1850ad70e2e)
+
+2. Create a backend tf terraform block in your terraform project folder 
+
+```
+terraform {
+  backend "s3" {
+    bucket = "mybucket"
+    key    = "path/to/my/key"
+    region = "us-east-1"
+  }
+}
+```
+
+3. Initialize using ``terraform init``. Once initialized do a ``terraform apply -auto-approve``.
+
