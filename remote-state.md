@@ -15,7 +15,7 @@
 
 ![s3-bucket](https://github.com/josiah34/terraform-course/assets/25124463/ff8045eb-f382-48c4-aacc-c1850ad70e2e)
 
-2. Create a backend tf terraform block in your terraform project folder 
+2. Create a backend tf terraform block in your terraform project folder. This is the default block provided from the official documentation. Change the values to match your configuration. 
 
 ```
 terraform {
@@ -31,3 +31,7 @@ terraform {
 
 4. You'll notice that this time after resource creation that no local state file is created. Instead it is stored on the S3 bucket that was created. 
 5.  ![remote-state](https://github.com/josiah34/terraform-course/assets/25124463/5bcda016-1420-43bb-a207-432bef38e6b0)
+
+6. We will have to create a DynamoDB table to enable state locking to prevent concurrent writes to the state file. 
+
+7. 
