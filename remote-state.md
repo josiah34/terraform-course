@@ -71,5 +71,5 @@ terraform {
 
 ```
 
-Next use the ``terraform login`` command to authenticate to your terraform cloud account. 
+Next use the ``terraform login`` command to authenticate to your terraform cloud account. After that I created a variable set on my Terraform Cloud which I enabled globally for all my workspaces. Then added my AWS credentials as environment variables. Make sure to mark them as sensitive so they do not show in plain text in any logs. 
 
