@@ -33,5 +33,43 @@ terraform {
 5.  ![remote-state](https://github.com/josiah34/terraform-course/assets/25124463/5bcda016-1420-43bb-a207-432bef38e6b0)
 
 6. We will have to create a DynamoDB table to enable state locking to prevent concurrent writes to the state file. 
+7. We will also have to change the backend block in the terraform code. **Note the new dynamodb_table within the block**
 
-7. Now when we try to do two operations at the same time we will get an error. 
+```
+terraform {
+  backend "s3" {
+    bucket = "my-masterterraform"
+    key    = "s3_backend.tfstate"
+    dynamodb_table = "s3-state-lock"
+    region = "us-east-1"
+  }
+}
+```
+
+8. Now when we try to do two operations at the same time we will get an error. 
+
+
+### Terraform Cloud 
+
+We can also create a Terraform Cloud account to store the state file there. After account creation make a new organization. 
+
+```
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+  cloud {
+    organization = "master-terraform-jg"
+    workspaces {
+      name = "terraform-cloud"
+    }
+  }
+}
+
+```
+
+Next use the ``terraform login`` command to authenticate to your terraform cloud account. 
+
