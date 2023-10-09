@@ -34,4 +34,4 @@ terraform {
 
 6. We will have to create a DynamoDB table to enable state locking to prevent concurrent writes to the state file. 
 
-7. 
+7. Now when we try to do two operations at the same time we will get an error. 
