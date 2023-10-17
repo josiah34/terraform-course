@@ -10,15 +10,14 @@ terraform {
 
 # Configure the AWS Provider
 provider "aws" {
-  region = var.aws_region
+  region = "us-east-1"
 }
 
 
 # Create VPC
 
 resource "aws_vpc" "main" {
-  cidr_block         = var.vpc_cidr_block
-  enable_dns_support = var.enable_dns
+  cidr_block = var.vpc_cidr_block
 
   tags = {
     "Name" = "Production ${var.main_vpc_name}"
@@ -30,7 +29,7 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "web" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.web_subnet_cidr_block
-  availability_zone = var.azs[2]
+  availability_zone = "us-east-1a"
   tags = {
     "Name" = "Web subnet"
   }
@@ -63,26 +62,36 @@ resource "aws_default_route_table" "main_vpc_default_rt" {
 
 resource "aws_default_security_group" "default_sec_group" {
   vpc_id = aws_vpc.main.id
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    # cidr_blocks = [var.my_public_ip]
-  }
+  # ingress {
+  #   from_port   = 22
+  #   to_port     = 22
+  #   protocol    = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  #   # cidr_blocks = [var.my_public_ip]
+  # }
 
-  ingress {
-    from_port   = var.web_port
-    to_port     = var.web_port
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+
+  # This will dynamically create the ingress block for the security group
+  # Loops through the list of ports in the variable "ingress_ports" and creates a block for each port
+  # The "for_each" meta-argument is used to create multiple instances of a resource or module
+  # The "content" argument is used to define the body of the dynamic block
+
+
+  dynamic "ingress" {
+    for_each = var.ingress_ports
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
 
   egress {
-    from_port   = var.egress_dsg["from_port"]
-    to_port     = var.egress_dsg["to_port"]
-    protocol    = var.egress_dsg["protocol"]
-    cidr_blocks = var.egress_dsg["cidr_blocks"]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
@@ -91,17 +100,16 @@ resource "aws_default_security_group" "default_sec_group" {
 }
 
 resource "aws_instance" "server" {
-  ami           = var.amis[var.aws_region]
-  instance_type = var.my_instance[0]
+  ami                         = "ami-04cb4ca688797756f"
+  instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.web.id
   vpc_security_group_ids      = [aws_default_security_group.default_sec_group.id]
-  associate_public_ip_address = var.my_instance[2]
+  associate_public_ip_address = true
   key_name                    = "prod_ssh_key"
   tags = {
     "Name" = "my-server"
   }
 }
-
 
 
 # resource "aws_instance" "server" {
